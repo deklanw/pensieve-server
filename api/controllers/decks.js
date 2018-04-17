@@ -31,17 +31,16 @@ router.get('/', async (req, res) => {
 });
 
 // POST /decks
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const user = req.user._id;
   const { body } = req;
 
-  Deck.new(body, user)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    const response = await Deck.new(body, user);
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // GET /decks/:id
@@ -66,18 +65,17 @@ router.get('/:id', async (req, res) => {
 });
 
 // PUT /decks/:id
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   const user = req.user._id;
   const { id } = req.params;
   const { body } = req;
 
-  Deck.update(id, body, user)
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((response) => {
-      res.status(500).json(response);
-    });
+  try {
+    const response = await Deck.update(id, body, user);
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 // DELETE /deck/:id
