@@ -118,19 +118,19 @@ module.exports.resetAllByDeck = function resetAllByDeck(deckId, user) {
 module.exports.review = function review(id, value, user) {
   return Card.findOne({ _id: id, user }).then((card) => {
     const grade = SM2.getGrade(value);
-    card.reviewedAt = new Date(); // eslint-disable-line no-param-reassign
+    card.reviewedAt = new Date();
 
     if (grade < 3) {
-      card.repetitions = 0; // eslint-disable-line no-param-reassign
-      card.interval = 0; // eslint-disable-line no-param-reassign
+      card.repetitions = 0;
+      card.interval = 0;
     } else {
-      card.repetitions += 1; // eslint-disable-line no-param-reassign
-      card.EF = SM2.getEF(card.EF, grade); // eslint-disable-line no-param-reassign
-      card.interval = SM2.getNextInterval(card, grade); // eslint-disable-line no-param-reassign
+      card.repetitions += 1;
+      card.EF = SM2.getEF(card.EF, grade);
+      card.interval = SM2.getNextInterval(card, grade);
     }
     const nextReviewDate = new Date();
     nextReviewDate.setDate(nextReviewDate.getDate() + card.interval);
-    card.nextReviewDate = nextReviewDate; // eslint-disable-line no-param-reassign
+    card.nextReviewDate = nextReviewDate;
 
     return card.save();
   });
@@ -140,11 +140,11 @@ module.exports.reset = function reset(id, user) {
   return Card.findOne({ _id: id, user })
     .populate('deck')
     .then((card) => {
-      card.repetitions = 0; // eslint-disable-line no-param-reassign
-      card.EF = 2.5; // eslint-disable-line no-param-reassign
-      card.nextReviewDate = undefined; // eslint-disable-line no-param-reassign
-      card.interval = undefined; // eslint-disable-line no-param-reassign
-      card.reviewedAt = undefined; // eslint-disable-line no-param-reassign
+      card.repetitions = 0;
+      card.EF = 2.5;
+      card.nextReviewDate = undefined;
+      card.interval = undefined;
+      card.reviewedAt = undefined;
 
       return card.save();
     });

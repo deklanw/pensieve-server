@@ -16,7 +16,6 @@ router.get('/', async (req, res) => {
     if (deck) {
       cards = await Card.getAllByDeck(deck, user);
       cards = cards.map((card) => {
-        // eslint-disable-next-line no-param-reassign
         card.recallRate = recallRate.getRecallRate(card);
         return card;
       });
@@ -39,7 +38,6 @@ router.post('/', async (req, res) => {
 
   try {
     const card = await Card.create(body, user);
-    // eslint-disable-next-line no-param-reassign
     card.recallRate = recallRate.getRecallRate(card);
     res.status(200).json(card);
   } catch (error) {
@@ -55,7 +53,6 @@ router.get('/:id', async (req, res) => {
   try {
     const card = await Card.get(id, user);
 
-    // eslint-disable-next-line no-param-reassign
     card.recallRate = recallRate.getRecallRate(card);
 
     res.status(200).json(card);
@@ -72,7 +69,6 @@ router.put('/:id', async (req, res) => {
 
   try {
     const card = await Card.update(id, body, user);
-    // eslint-disable-next-line no-param-reassign
     card.recallRate = recallRate.getRecallRate(card);
     res.status(200).json(card);
   } catch (error) {
@@ -103,7 +99,6 @@ router.post('/:id/review', async (req, res) => {
   try {
     await Review.create(cardId, value, user);
     const card = await Card.review(cardId, value, user);
-    // eslint-disable-next-line no-param-reassign
     card.recallRate = recallRate.getRecallRate(card);
 
     res.status(200).json(card);

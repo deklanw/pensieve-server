@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 // Shuffle function from Stackoverflow
 // @see https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffle(array) {
