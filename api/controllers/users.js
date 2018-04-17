@@ -113,7 +113,7 @@ router.delete('/profile', auth, async (req, res) => {
   try {
     await User.delete(user);
     await Card.deleteAll(user);
-    const response = Deck.remove({ user });
+    const response = await Deck.remove({ user });
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json(error);
