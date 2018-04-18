@@ -76,7 +76,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-
 // DELETE /cards/:id
 router.delete('/:id', async (req, res) => {
   const user = req.user._id;

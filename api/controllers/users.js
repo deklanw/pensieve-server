@@ -19,8 +19,8 @@ router.post('/signup', async (req, res) => {
     const token = await User.generateToken(user);
     await createDefaultDeck(user);
     AdminMailer.sendSignupAlert(user);
-    // TODO: move token to request header
-    res.status(200).json({ user, token });
+    res.set('Authorization', `Bearer ${token}`);
+    res.status(200).json({ user });
   } catch (error) {
     if (error.message === 'Invalid User') {
       res.status(400).json(error);
@@ -38,8 +38,8 @@ router.post('/login', async (req, res) => {
     const user = await User.authenticate(email, password);
     const token = await User.generateToken(user);
 
-    // TODO: move token to request header
-    res.status(200).json({ user, token });
+    res.set('Authorization', `Bearer ${token}`);
+    res.status(200).json({ user });
   } catch (error) {
     if (error.message === 'Invalid User') {
       res.status(400).json(error);

@@ -10,7 +10,6 @@ function authenticate(req, res, next) {
       message: 'Invalid authentication. Please include a JWT token',
     });
   }
-
   token = token.replace('Bearer ', '');
 
   return jwt.verify(token, jwtSecret, (err, user) => {
