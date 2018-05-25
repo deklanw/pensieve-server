@@ -60,6 +60,7 @@ module.exports.getAllForSessionType = function getAllForSessionType(type, user, 
       case Session.types.deck:
         return Card.find({ user, deck })
           .populate('deck')
+          .sort('nextReviewDate')
           .where('nextReviewDate')
           .lt(new Date());
       default:
@@ -69,11 +70,15 @@ module.exports.getAllForSessionType = function getAllForSessionType(type, user, 
 };
 
 module.exports.create = function create(body, user) {
+  const oneHourFuture = new Date();
+  oneHourFuture.setHours(oneHourFuture.getHours() + 1);
+
   return Card.create({
     user,
     front: body.front,
     back: body.back,
     deck: body.deck,
+    nextReviewDate: oneHourFuture,
   });
 };
 
@@ -116,24 +121,26 @@ module.exports.resetAllByDeck = function resetAllByDeck(deckId, user) {
 };
 
 module.exports.review = function review(id, value, user) {
-  return Card.findOne({ _id: id, user }).then((card) => {
-    const grade = SM2.getGrade(value);
-    card.reviewedAt = new Date();
+  return Card.findOne({ _id: id, user })
+    .populate('deck')
+    .then((card) => {
+      const grade = SM2.getGrade(value);
+      card.reviewedAt = new Date();
 
-    if (grade < 3) {
-      card.repetitions = 0;
-      card.interval = 0;
-    } else {
-      card.repetitions += 1;
-      card.EF = SM2.getEF(card.EF, grade);
-      card.interval = SM2.getNextInterval(card, grade);
-    }
-    const nextReviewDate = new Date();
-    nextReviewDate.setDate(nextReviewDate.getDate() + card.interval);
-    card.nextReviewDate = nextReviewDate;
+      if (grade < 3) {
+        card.repetitions = 0;
+        card.interval = 0;
+      } else {
+        card.repetitions += 1;
+        card.EF = SM2.getEF(card.EF, grade);
+        card.interval = SM2.getNextInterval(card, grade);
+      }
+      const nextReviewDate = new Date();
+      nextReviewDate.setDate(nextReviewDate.getDate() + card.interval);
+      card.nextReviewDate = nextReviewDate;
 
-    return card.save();
-  });
+      return card.save();
+    });
 };
 
 module.exports.reset = function reset(id, user) {

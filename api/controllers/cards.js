@@ -2,7 +2,7 @@ const express = require('express');
 
 const Card = require('../models/card');
 const Review = require('../models/review');
-const recallRate = require('../helpers/recallRate');
+const getRecallRate = require('../helpers/getRecallRate');
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     if (deck) {
       cards = await Card.getAllByDeck(deck, user);
       cards = cards.map((card) => {
-        card.recallRate = recallRate.getRecallRate(card);
+        card.recallRate = getRecallRate(card);
         return card;
       });
     } else if (type) {
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
 
   try {
     const card = await Card.create(body, user);
-    card.recallRate = recallRate.getRecallRate(card);
+    card.recallRate = getRecallRate(card);
     res.status(200).json(card);
   } catch (error) {
     res.status(500).json(error);
@@ -53,7 +53,7 @@ router.get('/:id', async (req, res) => {
   try {
     const card = await Card.get(id, user);
 
-    card.recallRate = recallRate.getRecallRate(card);
+    card.recallRate = getRecallRate(card);
 
     res.status(200).json(card);
   } catch (error) {
@@ -69,7 +69,7 @@ router.put('/:id', async (req, res) => {
 
   try {
     const card = await Card.update(id, body, user);
-    card.recallRate = recallRate.getRecallRate(card);
+    card.recallRate = getRecallRate(card);
     res.status(200).json(card);
   } catch (error) {
     res.status(500).json(error);
@@ -98,7 +98,7 @@ router.post('/:id/review', async (req, res) => {
   try {
     await Review.create(cardId, value, user);
     const card = await Card.review(cardId, value, user);
-    card.recallRate = recallRate.getRecallRate(card);
+    card.recallRate = getRecallRate(card);
 
     res.status(200).json(card);
   } catch (error) {

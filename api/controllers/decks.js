@@ -2,7 +2,7 @@ const express = require('express');
 
 const Deck = require('../models/deck');
 const Card = require('../models/card');
-const recallRate = require('../helpers/recallRate');
+const getCardAverage = require('../helpers/getCardAverage');
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     decks = await Promise.all(decks.map(async (deck) => {
       const cards = await Card.getAllByDeck(deck, user);
 
-      deck.recallRate = recallRate.getCardAverage(cards);
+      deck.recallRate = getCardAverage(cards);
       deck.cardsCount = cards.length;
 
       return deck;
@@ -51,7 +51,7 @@ router.get('/:id', async (req, res) => {
 
     const cards = await Card.getAllByDeck(deck, user);
 
-    deck.recallRate = recallRate.getCardAverage(cards);
+    deck.recallRate = getCardAverage(cards);
     deck.cardsCount = cards.length;
 
     res.status(200).json(deck);
