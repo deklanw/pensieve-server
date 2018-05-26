@@ -1,15 +1,16 @@
 /* eslint-disable no-console */
 process.env.NODE_ENV = 'test';
 
+require('../config/env').config();
+
 const Mocha = require('mocha');
 const chalk = require('chalk');
 const paths = require('../config/paths');
 const glob = require('glob');
-const fixtures = require('pow-mongodb-fixtures').connect('boreas-test');
+const fixtures = require('pow-mongodb-fixtures').connect(process.env.MONGODB_URI);
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
 
-require('../config/env').config();
 require('chai/register-expect');
 
 chai.use(sinonChai);
