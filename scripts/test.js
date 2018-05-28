@@ -16,7 +16,9 @@ require('chai/register-expect');
 chai.use(sinonChai);
 
 // Instantiate a Mocha instance.
-const mocha = new Mocha();
+const mocha = new Mocha({
+  timeout: 3000,
+});
 
 const fileName = process.argv.slice(2)[0];
 

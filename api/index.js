@@ -9,8 +9,6 @@ const db = require('../db');
 
 const app = express();
 
-db.connect();
-
 const corsOptions = {
   origin: '*',
   exposedHeaders: ['Authorization'],
@@ -24,12 +22,14 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 app.use(require('./controllers'));
 
-const server = app.listen(process.env.PORT || 5000, (err) => {
-  if (err) {
-    console.error(err);
-  } else if (process.env.NODE_ENV === 'development') {
-    console.log(chalk.cyan('✨  Starting the server...'));
-  }
-});
-
-module.exports = server;
+module.exports = () =>
+  db.connect().then(() => {
+    const server = app.listen(process.env.PORT || 5000, (err) => {
+      if (err) {
+        console.error(err);
+      } else if (process.env.NODE_ENV === 'development') {
+        console.log(chalk.cyan('✨  Starting the server...'));
+      }
+    });
+    return server;
+  });

@@ -1,11 +1,18 @@
 const request = require('supertest');
 const data = require('../../fixtures/decks');
-const server = require('../../../api/index');
+const startServer = require('../../../api/index');
 const User = require('../../../api/models/user');
 
 const { decks, user1, user2 } = data;
+let server;
 
 describe('Decks controller', () => {
+  before(async () => {
+    server = await startServer();
+  });
+  after(() => {
+    server.close();
+  });
   describe('GET /api/decks', () => {
     it('should return 400 if no authentication provided', (done) => {
       request(server)

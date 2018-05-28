@@ -9,7 +9,7 @@ describe('User model', () => {
   describe('get', () => {
     it('should return user with matching id', (done) => {
       User.get(user1._id).then((user) => {
-        expect(user._id).to.deep.equal(user1._id);
+        expect(user._id.equals(user1._id)).to.be.true;
         expect(user.name).to.equal(user1.name);
         expect(user.email).to.equal(user1.email);
 
@@ -18,7 +18,7 @@ describe('User model', () => {
     });
     it('should not return `password` field', (done) => {
       User.get(user1._id).then((user) => {
-        expect(user._id).to.deep.equal(user1._id);
+        expect(user._id.equals(user1._id)).to.be.true;
         expect(user).to.not.have.property('password');
 
         done();
@@ -29,7 +29,7 @@ describe('User model', () => {
     it('should update user with matching id', (done) => {
       const newUser = { name: 'Jon Tester', email: 'jon@example.com' };
       User.update(newUser, user1._id).then((user) => {
-        expect(user._id).to.deep.equal(user1._id);
+        expect(user._id.equals(user1._id)).to.be.true;
         expect(user.name).to.equal(newUser.name);
         expect(user.email).to.equal(newUser.email);
 
@@ -39,7 +39,7 @@ describe('User model', () => {
     it('should not update fields that are not defined', (done) => {
       const newUser = { name: 'Joe Tester', email: undefined };
       User.update(newUser, user2._id).then((user) => {
-        expect(user._id).to.deep.equal(user2._id);
+        expect(user._id.equals(user2._id)).to.be.true;
         expect(user.name).to.equal(newUser.name);
         expect(user.email).to.equal(user2.email);
 
@@ -49,7 +49,7 @@ describe('User model', () => {
     it('should not return `password` field', (done) => {
       const newUser = { name: 'Jon Tester', email: 'jon@example.com' };
       User.update(newUser, user1._id).then((user) => {
-        expect(user._id).to.deep.equal(user1._id);
+        expect(user._id.equals(user1._id)).to.be.true;
         expect(user).to.not.have.property('password');
 
         done();

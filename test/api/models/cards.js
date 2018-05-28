@@ -9,7 +9,7 @@ describe('Card model', () => {
   describe('get', () => {
     it('should return single card for user', async () => {
       const card = await Card.get(cards[0]._id, user1);
-      expect(card._id).to.deep.equal(cards[0]._id);
+      expect(card._id.equals(cards[0]._id)).to.be.true;
       expect(card.front).to.deep.equal(cards[0].front);
     });
   });
@@ -31,7 +31,7 @@ describe('Card model', () => {
       const card = await Card.create(newCard, user1);
       expect(card.front).to.equal(newCard.front);
       expect(card.back).to.equal(newCard.back);
-      expect(card.deck).to.deep.equal(deck1);
+      expect(card.deck.equals(deck1)).to.be.true;
     });
   });
   describe('update', () => {

@@ -1,19 +1,29 @@
 const request = require('supertest');
 const data = require('../../fixtures/cards');
-const server = require('../../../api/index');
+const startServer = require('../../../api/index');
 const User = require('../../../api/models/user');
 
 const { user1, user2 } = data;
 
+let server;
+
 describe('Cards controller', () => {
+  before(async () => {
+    server = await startServer();
+  });
+  after(() => {
+    server.close();
+  });
   describe('GET /api/cards', () => {
     it('should return array of cards for user', (done) => {
       const token = User.generateToken(user1);
+      console.time('SERVER');
       request(server)
         .get('/api/cards')
         .set({ Authorization: token })
         .expect(200)
         .then((response) => {
+          console.timeEnd('SERVER');
           expect(response.body).to.have.lengthOf(2);
 
           done();

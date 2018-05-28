@@ -1,7 +1,15 @@
 const request = require('supertest');
-const server = require('../../api/index');
+const startServer = require('../../api/index');
+
+let server;
 
 describe('Server', () => {
+  before(async () => {
+    server = await startServer();
+  });
+  after(() => {
+    server.close();
+  });
   it('GET / redirects to /docs', (done) => {
     request(server)
       .get('/')

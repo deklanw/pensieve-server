@@ -9,8 +9,8 @@ describe('Review model', () => {
     it('should create new review object for user', (done) => {
       Review.create(card1, 'hard', user1).then((review) => {
         expect(review.value).to.equal('hard');
-        expect(review.user).to.deep.equal(user1);
-        expect(review.card).to.deep.equal(card1);
+        expect(review.user.equals(user1)).to.be.true;
+        expect(review.card.equals(card1)).to.be.true;
 
         done();
       });
