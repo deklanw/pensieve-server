@@ -1,24 +1,15 @@
 const request = require('supertest');
 const User = require('../../../api/models/user');
-const startServer = require('../../../api/index');
 const data = require('../../fixtures/users');
 
 const { users, password1 } = data;
 const user1 = users[0];
 const user3 = users[2];
 
-let server;
-
 describe('Users controller', () => {
-  before(async () => {
-    server = await startServer();
-  });
-  after(() => {
-    server.close();
-  });
   describe('POST /api/users/login', () => {
     it('should return user if authentication is valid', (done) => {
-      request(server)
+      request(global.testingServer)
         .post('/api/users/login')
         .send({ email: user1.email, password: password1 })
         .expect(200)
@@ -32,7 +23,7 @@ describe('Users controller', () => {
         .catch(error => done(error));
     });
     it('should return token if authentication is valid', (done) => {
-      request(server)
+      request(global.testingServer)
         .post('/api/users/login')
         .send({ email: user1.email, password: password1 })
         .expect(200)
@@ -49,7 +40,7 @@ describe('Users controller', () => {
   describe('POST /api/users/signup', () => {
     it('should create user if signup is valid', (done) => {
       const newUser = { name: 'Jim', email: 'jim@example.com', password: 'test password' };
-      request(server)
+      request(global.testingServer)
         .post('/api/users/signup')
         .send(newUser)
         .expect(200)
@@ -67,7 +58,7 @@ describe('Users controller', () => {
   describe('GET /api/users/profile', () => {
     it('should return user for valid token', (done) => {
       const token = User.generateToken(user1);
-      request(server)
+      request(global.testingServer)
         .get('/api/users/profile')
         .set({ Authorization: token })
         .expect(200)
@@ -85,7 +76,7 @@ describe('Users controller', () => {
     it('should update single user for valid token', (done) => {
       const token = User.generateToken(user3);
       const newUser = { name: 'Greg Tester', email: 'greg@example.com' };
-      request(server)
+      request(global.testingServer)
         .put('/api/users/profile')
         .send(newUser)
         .set({ Authorization: token })

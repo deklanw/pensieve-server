@@ -1,23 +1,15 @@
+/* eslint-disable func-names */
 const request = require('supertest');
 const data = require('../../fixtures/cards');
-const startServer = require('../../../api/index');
 const User = require('../../../api/models/user');
 
 const { user1, user2 } = data;
 
-let server;
-
 describe('Cards controller', () => {
-  before(async () => {
-    server = await startServer();
-  });
-  after(() => {
-    server.close();
-  });
   describe('GET /api/cards', () => {
     it('should return array of cards for user', (done) => {
       const token = User.generateToken(user1);
-      request(server)
+      request(global.testingServer)
         .get('/api/cards')
         .set({ Authorization: token })
         .expect(200)
@@ -33,7 +25,7 @@ describe('Cards controller', () => {
     it('should create single card for user', (done) => {
       const token = User.generateToken(user2);
       const newCard = { front: 'Test front', back: 'Test back' };
-      request(server)
+      request(global.testingServer)
         .post('/api/cards')
         .send(newCard)
         .set({ Authorization: token })
@@ -51,7 +43,7 @@ describe('Cards controller', () => {
     it('should delete single card for user', (done) => {
       const token = User.generateToken(user2);
       const card = data.cards[3];
-      request(server)
+      request(global.testingServer)
         .delete(`/api/cards/${card._id}`)
         .set({ Authorization: token })
         .expect(200, done);

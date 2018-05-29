@@ -1,24 +1,15 @@
 const request = require('supertest');
 const data = require('../../fixtures/sessions');
-const startServer = require('../../../api/index');
 const User = require('../../../api/models/user');
 
 const { sessions, user1 } = data;
 
-let server;
-
 describe('Sessions controller', () => {
-  before(async () => {
-    server = await startServer();
-  });
-  after(() => {
-    server.close();
-  });
   describe('GET /api/sessions/:id', () => {
     it('should return a single session for user', (done) => {
       const expectedSession = sessions[0];
       const token = User.generateToken(user1);
-      request(server)
+      request(global.testingServer)
         .get(`/api/sessions/${sessions[0]._id}`)
         .set({ Authorization: token })
         .expect(200)

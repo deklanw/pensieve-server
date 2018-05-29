@@ -1,21 +1,13 @@
 const request = require('supertest');
 const data = require('../../fixtures/decks');
-const startServer = require('../../../api/index');
 const User = require('../../../api/models/user');
 
 const { decks, user1, user2 } = data;
-let server;
 
 describe('Decks controller', () => {
-  before(async () => {
-    server = await startServer();
-  });
-  after(() => {
-    server.close();
-  });
   describe('GET /api/decks', () => {
     it('should return 400 if no authentication provided', (done) => {
-      request(server)
+      request(global.testingServer)
         .get('/api/decks')
         .expect(400, done);
     });
@@ -24,7 +16,7 @@ describe('Decks controller', () => {
       const token = User.generateToken(user1);
       const expectedDecks = decks.filter(deck => deck.user === user1._id);
 
-      request(server)
+      request(global.testingServer)
         .get('/api/decks')
         .set({ Authorization: token })
         .expect(200)
@@ -40,7 +32,7 @@ describe('Decks controller', () => {
     it('should create single deck for user', (done) => {
       const token = User.generateToken(user2);
       const newDeck = { title: 'test deck', description: 'test description' };
-      request(server)
+      request(global.testingServer)
         .post('/api/decks')
         .send(newDeck)
         .set({ Authorization: token })
@@ -58,7 +50,7 @@ describe('Decks controller', () => {
     it('should delete single deck for user', (done) => {
       const token = User.generateToken(user2);
       const deck = data.decks[2];
-      request(server)
+      request(global.testingServer)
         .delete(`/api/decks/${deck._id}`)
         .set({ Authorization: token })
         .expect(200, done);

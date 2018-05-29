@@ -16,7 +16,7 @@ module.exports.connect = () => {
     });
     mongoDB.once('open', () => {
       console.log(chalk.cyan('✨  Connection to database established'));
-      success();
+      success(mongoDB);
     });
   });
 };
