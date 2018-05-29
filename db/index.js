@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 module.exports.connect = () => {
   const mongoURI = process.env.MONGODB_URI;
 
-  mongoose.Promise = global.Promise;
   mongoose.connect(mongoURI);
 
   const mongoDB = mongoose.connection;
