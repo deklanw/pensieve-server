@@ -17,13 +17,11 @@ describe('Cards controller', () => {
   describe('GET /api/cards', () => {
     it('should return array of cards for user', (done) => {
       const token = User.generateToken(user1);
-      console.time('SERVER');
       request(server)
         .get('/api/cards')
         .set({ Authorization: token })
         .expect(200)
         .then((response) => {
-          console.timeEnd('SERVER');
           expect(response.body).to.have.lengthOf(2);
 
           done();
